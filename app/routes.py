@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, url_for, request
 from werkzeug.urls import url_parse
 from app import app, db
-from app.forms import LoginForm, RegistrationForm, EditProfileForm, PostForm, SearchForm
+from app.forms import EditPostForm, LoginForm, RegistrationForm, EditProfileForm, PostForm, SearchForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Post
 from datetime import datetime, timedelta
@@ -35,6 +35,7 @@ def before_request():
 def index():
 
   form = PostForm()
+
   if form.validate_on_submit():
     post = Post(body=form.post.data, author=current_user)
     db.session.add(post)
@@ -194,3 +195,24 @@ def search_results(query):
   results = Post.query.msearch(query)
   return render_template('index.html',title='Search Results',posts=results)
 
+
+#TODO copy as is
+@app.route('/edit_post/<post>', methods=['GET','POST'])
+@login_required
+def edit_post(post):
+  form = EditPostForm(post)
+  idx_str = post.split("~")[1]
+  idx_str = idx_str[0:len(idx_str)-1]
+
+  print("Values are:" + post.split("~")[1][0:len(post)])
+  print("Id: "+idx_str)
+  if form.validate_on_submit():
+    tp = Post.query.filter_by(id = idx_str).first()
+    print(tp)
+    tp.body = form.post.data
+    db.session.commit()
+    flash('Your changes have been saved')
+    return redirect(url_for('index'))
+  elif request.method == 'GET':
+    form.post.data = post
+  return render_template('edit_post.html', title="Edit Post", form=form)

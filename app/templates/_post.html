@@ -13,5 +13,8 @@
                 <br>
                 {{ post.body }}
             </td>
+            <td>
+                <p><a href="{{ url_for('edit_post', post=post) }}">Edit your post</a></p>
+            </td>
         </tr>
     </table>

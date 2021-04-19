@@ -45,10 +45,25 @@ class PostForm(FlaskForm):
   post = TextAreaField('Say something', validators=[
     DataRequired(), Length(min=1, max=140)
   ])
+  edit = SubmitField('Edit')
   submit = SubmitField('Submit')
+
+
 
 class SearchForm(FlaskForm):
   search = StringField('search', [DataRequired()])
   submit = SubmitField('Search',
   render_kw={'class': 'btn btn-success btn-block'})
+
+
+#TODO Copy as is
+class EditPostForm(FlaskForm):
+  post = TextAreaField('Say something', validators=[
+    DataRequired(), Length(min=1, max=140)
+  ])
+  submit = SubmitField('Submit')
+
+  def __init__(self, original_post, *args, **kwargs):
+    super(EditPostForm, self).__init__(*args, **kwargs)
+    self.original_post = original_post
 

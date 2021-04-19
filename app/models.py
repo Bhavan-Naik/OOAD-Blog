@@ -65,6 +65,7 @@ class User(UserMixin, db.Model):
 
 
 class Post(db.Model):
+  print("Creating")
   __searchable__ = ['body']
   id = db.Column(db.Integer, primary_key=True)
   body = db.Column(db.String(140))
@@ -72,6 +73,7 @@ class Post(db.Model):
   user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
   def __repr__(self):
-    return '<Post {}>'.format(self.body)
+    print(self.id)
+    return '<Post {} ~ {}>'.format(self.body,self.id)
 
 # whoosh_index(app, Post)
